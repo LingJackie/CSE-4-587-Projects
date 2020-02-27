@@ -2,6 +2,23 @@
 """
 Predicitve_Analytics.py
 """
+import numpy as np
+
+
+
+""" HELPERS """
+
+""" for K Nearest Neigbor """
+def EuclideanDistance(X_vect, Y_vect):
+    return np.sqrt(    np.sum(    np.power(X_vect - Y_vect, 2)   )    )
+
+
+
+
+
+
+
+
 
 
 def Accuracy(y_true,y_pred):
@@ -11,6 +28,10 @@ def Accuracy(y_true,y_pred):
     :rtype: float
     
     """
+    bools = np.equal(y_true, y_pred)
+    count = bools.count(True)
+    return float(count) / len(y_true)
+
 
 def Recall(y_true,y_pred):
      """
