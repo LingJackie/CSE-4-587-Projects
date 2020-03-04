@@ -60,7 +60,17 @@ def ConfusionMatrix(y_true,y_pred):
     :type y_pred: numpy.ndarray
     :rtype: float
     """  
+    occurences = np.bincount(np.concatenate((y_true, y_pred), axis=0))
 
+    uniqueClasses = np.nonzero(occurences)[0]
+
+    numOfClasses = uniqueClasses.size
+    
+    tmp = y_true*numOfClasses + y_pred
+
+    stuff = np.histogram(tmp, bins = np.arange(0, numOfClasses**2+1))
+    
+    return stuff[0].reshape(numOfClasses,numOfClasses)
 def KNN(X_train,X_test,Y_train):
      """
     :type X_train: numpy.ndarray
