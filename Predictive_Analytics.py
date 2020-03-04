@@ -89,17 +89,36 @@ def RandomForest(X_train,Y_train,X_test):
     
 def PCA(X_train,N):
     """
-    :type X_train: numpy.ndarray
+    :type X_train: numpy.ndarray                   
     :type N: int
     :rtype: numpy.ndarray
     """
     
-    meanOfEachColumn = np.mean(X_train, axis=0)""" create an array of means of each column of x)"""
-    zeroMeanMatrix = np.subtract(X_train, meanOfEachColumn)""" for each column: subtracts the mean of the column from each entry
-                                                               This ensures that each column has a mean of zero"""
-    standardOfEachColumn = np.std(zeroMeanMatrix, axis=0) """ create an array of standard deviation of each column of x)"""
-    zeroStandMatrix = np.divide(zeroMeanMatrix, standardOfEachColumn) """each column has mean of zero and standard deviation of 1""" 
-    covariance = np.multiply(zeroStandMatrix.T , zeroStandMatrix)                                                
+    
+    """ create an array of means of each column of x"""
+    meanOfEachColumn = np.mean(X_train, axis=0)
+    
+    
+    """ subtract each element of a column by that columns mean
+    """
+    zeroMeanMatrix = np.subtract(X_train, meanOfEachColumn)
+     
+    covariance = np.cov(zeroStandMatrix)
+    
+    
+    """ finds eigen values and eigen vectors and sorts them largest to 
+        smallest based on the eigen values
+    """
+    eigenVals, eigenVects = np.linalg.eig(covariance)
+    idx = eigenVals.argsort()[::-1]   
+    eigenVals = eigenVals[idx]
+    """eigenVect is a matrix with each column being an eigen vector """
+    eigenVects = eigenVects[:,idx]
+    
+    """grabs first N columns of the sorted eigen Vectors"""
+    pComponents = eigenVects[:,:N]
+    return np.dot(pComponents.T, X_train)
+    
 def Kmeans(X_train,N):
     """
     :type X_train: numpy.ndarray
