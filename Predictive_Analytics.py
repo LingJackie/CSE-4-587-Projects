@@ -28,26 +28,55 @@ def Accuracy(y_true,y_pred):
     :rtype: float
     
     """
+    cm = ConfusionMatrix(y_true,y_pred)
     
-
-
+    TN = []
+    for i in range(0,cm[0].size):
+        stuff = np.delete(cm, i, 0)
+        stuff2 = np.delete(stuff, i, 1)
+        TN.append(np.sum(stuff2))
+    TN = np.asarray(TN)   
+    
+    
+    TP = np.diag(cm)
+    FN = np.sum(cm, axis=1) - TP
+    FP = np.sum(cm, axis=0) - TP
+    tmp = (TP + TN + FN + FP)
+    return np.sum( (TP + TN)/ tmp) / cm[0].size
+    
 def Recall(y_true,y_pred):
-     """
+    """
     :type y_true: numpy.ndarray
     :type y_pred: numpy.ndarray
     :rtype: float
     """
+    cm = ConfusionMatrix(y_true,y_pred)
+    TP = np.diag(cm)
+    FN = np.sum(cm, axis=1) - TP
+    tmp = (TP + FN)
+    return np.sum(TP / tmp) / cm[0].size
 
-def Precision(y_true,y_pred):""" probably right didnt test """
+def Precision(y_true,y_pred):
     """
     :type y_true: numpy.ndarray
     :type y_pred: numpy.ndarray
     :rtype: float
+    
+    PRECISION = TRUE POSITIVE/ (FALSE POSITIVE + TRUE POSITIVE)
     """
     
+    
+    cm = ConfusionMatrix(y_true,y_pred)
+    TP = np.diag(cm)
+    FP = np.sum(cm, axis=0) - TP
+    tmp = (TP + FP)
+    return np.sum(TP / tmp) / cm[0].size
+
+    """
     bools = np.equal(y_true, y_pred)
     count = bools.count(True)
     return float(count) / len(y_true)
+    """
 def WCSS(Clusters):
     """
     :Clusters List[numpy.ndarray]
